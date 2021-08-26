@@ -24,6 +24,9 @@ prometheus:
       - source_labels: [job]
         target_label: cluster_uuid
         replacement: {{ .Values.global.discovery.clusterUUID }}
+      - source_labels: [instance]
+        target_label: __replica__
+        replacement: ${NODE_NAME}
       - regex: hook|instance
         action: labeldrop
     remote_write:
