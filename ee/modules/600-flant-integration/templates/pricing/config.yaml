@@ -32,6 +32,9 @@ prometheus:
     remote_write:
     - url: {{ .Values.flantIntegration.metrics.url }}
       bearer_token: {{ .Values.flantIntegration.internal.licenseKey }}
+      metadata_config:
+        send: false
+
 {{- end }}
 
 {{- if .Values.flantIntegration.metrics }}
