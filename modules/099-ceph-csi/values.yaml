@@ -1,0 +1,4 @@
+cephCsi:
+  internal:
+    crs: {}
+    csiConfig: {}

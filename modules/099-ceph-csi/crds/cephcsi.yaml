@@ -1,0 +1,94 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: cephcsi.deckhouse.io
+  labels:
+    heritage: deckhouse
+    module: ceph-csi
+    app: ceph-csi
+spec:
+  group: deckhouse.io
+  scope: Cluster
+  names:
+    plural: cephcsi
+    kind: CephCSI
+  preserveUnknownFields: false
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema: &schema
+        openAPIV3Schema:
+          type: object
+          description: |
+            ...
+          required:
+            - spec
+          properties:
+            spec:
+              type: object
+              required:
+                - clusterID
+                - userID
+                - userKey
+                - monitors
+              properties:
+                clusterID:
+                  type: string
+                userID:
+                  type: string
+                userKey:
+                  type: string
+                monitors:
+                  type: array
+                  items:
+                    type: string
+                rbd:
+                  type: object
+                  properties:
+                    storageClasses:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          pool:
+                            type: string
+                          reclaimPolicy:
+                            type: string
+                          allowVolumeExpansion:
+                            type: boolean
+                          mountOptions:
+                            type: array
+                            items:
+                              type: string
+                          defaultFSType:
+                            type: string
+                            enum:
+                              - ext4
+                              - xfs
+                cephfs:
+                  type: object
+                  properties:
+                    subvolumeGroup:
+                      type: string
+                    storageClasses:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          pool:
+                            type: string
+                          reclaimPolicy:
+                            type: string
+                          allowVolumeExpansion:
+                            type: boolean
+                          mountOptions:
+                            type: array
+                            items:
+                              type: string
+                          fsName:
+                            type: string
