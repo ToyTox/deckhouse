@@ -1,0 +1,7 @@
+{
+  "alpha": {"enabled": false, "waves": 1, "interval": 1},
+  "beta": {"enabled": false, "waves": 1, "interval": 1},
+  "early-access": {"enabled": true, "waves": 6, "interval": 10},
+  "stable": {"enabled": true, "waves": 6, "interval": 10},
+  "rock-solid": {"enabled": false, "waves": 5, "interval": 5}
+}
