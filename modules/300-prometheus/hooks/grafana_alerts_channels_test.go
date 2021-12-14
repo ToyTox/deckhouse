@@ -138,7 +138,13 @@ spec:
 	f.RegisterCRD("deckhouse.io", "v1alpha1", "GrafanaAlertsChannel", false)
 
 	assertChannelsInValues := func(f *HookExecutionConfig, expectChannels []GrafanaAlertsChannel) {
-		channels := f.ValuesGet("prometheus.internal.grafana.alertsChannels").Array()
+		cfgJSON := f.ValuesGet("prometheus.internal.grafana.alertsChannelsConfig").Raw
+
+		var cfg GrafanaAlertsChannelsConfig
+		err := json.Unmarshal([]byte(cfgJSON), &cfg)
+		Expect(err).ToNot(HaveOccurred())
+
+		channels := cfg.Notifiers
 
 		Expect(channels).To(HaveLen(len(expectChannels)))
 
@@ -147,15 +153,11 @@ spec:
 			nameToChannel[c.UID] = c
 		}
 
-		for _, raw := range channels {
-			c := GrafanaAlertsChannel{}
-			err := json.Unmarshal([]byte(raw.Raw), &c)
-			Expect(err).ToNot(HaveOccurred())
-
+		for _, c := range channels {
 			expected, ok := nameToChannel[c.UID]
 
 			Expect(ok).To(BeTrue())
-			Expect(expected).To(Equal(c))
+			Expect(expected).To(Equal(*c))
 		}
 	}
 
@@ -163,6 +165,16 @@ spec:
 		BeforeEach(func() {
 			f.BindingContexts.Set(f.KubeStateSet(``))
 			f.RunHook()
+		})
+
+		It("Should store config in values", func() {
+			Expect(f).To(ExecuteSuccessfully())
+
+			exists := f.ValuesGet("prometheus.internal.grafana.alertsChannelsConfig").Exists()
+			Expect(exists).To(BeTrue())
+
+			exists = f.ValuesGet("prometheus.internal.grafana.alertsChannelsConfig.notifiers").Exists()
+			Expect(exists).To(BeTrue())
 		})
 
 		It("Does not set any channels in values", func() {

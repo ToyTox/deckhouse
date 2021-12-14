@@ -54,6 +54,10 @@ type GrafanaAlertsChannel struct {
 	SecureSettings        map[string]interface{} `json:"secure_settings"`
 }
 
+type GrafanaAlertsChannelsConfig struct {
+	Notifiers []*GrafanaAlertsChannel `json:"notifiers"`
+}
+
 func getStringFromUnstructured(obj *unstructured.Unstructured, path ...string) (string, error) {
 	val, ok, err := unstructured.NestedString(obj.Object, path...)
 	if err != nil {
@@ -138,7 +142,11 @@ func grafanaAlertsChannelsHandler(input *go_hook.HookInput) error {
 		alertsChannels = append(alertsChannels, nch)
 	}
 
-	input.Values.Set("prometheus.internal.grafana.alertsChannels", alertsChannels)
+	cfg := GrafanaAlertsChannelsConfig{
+		Notifiers: alertsChannels,
+	}
+
+	input.Values.Set("prometheus.internal.grafana.alertsChannelsConfig", cfg)
 
 	return nil
 }
