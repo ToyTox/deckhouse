@@ -1,9 +1,10 @@
 apiVersion: deckhouse.io/v1alpha1
 kind: GrafanaAlertsChannel
 metadata:
-  name: flant-madison
+  name: madison-proxy
 {{ include "helm_lib_module_labels" (list . (dict "app" "madison-proxy")) | indent 2 }}
 spec:
+  description: "Channel for sending alerts to Polk. Auto-created by flant-integration module"
   type: PrometheusAlertManager
   alertManager:
     address: {{ printf "http://madison-proxy.d8-monitoring.svc.%s:8080" .Values.global.discovery.clusterDomain | quote }}

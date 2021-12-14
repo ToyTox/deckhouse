@@ -27,6 +27,10 @@ spec:
             spec:
               type: object
               properties:
+                description:
+                  type: string
+                  default: ""
+                  description: Small and optional description about this alerts channel
                 type:
                   type: string
                   enum: ["PrometheusAlertManager"]
@@ -67,4 +71,8 @@ spec:
         - jsonPath: .spec.type
           name: Type
           description: 'Alerts channel type'
+          type: string
+        - jsonPath: .spec.description
+          name: Description
+          description: 'Alerts channel description'
           type: string
