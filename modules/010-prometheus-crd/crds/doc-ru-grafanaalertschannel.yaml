@@ -21,7 +21,7 @@ spec:
       schema:
         openAPIV3Schema:
           type: object
-          description: The resource for addinging  alert notification channels to Graphana.
+          description: Ресурс для добавления каналов оповещения в Grafana.
           required: ['spec']
           properties:
             spec:
@@ -30,21 +30,21 @@ spec:
                 description:
                   type: string
                   default: ""
-                  description: Small and optional description about this alerts channel.
+                  description: Небольшое необязательное описание для этого канала предупреждений.
                 type:
                   type: string
                   enum: ["PrometheusAlertManager"]
                 disableResolveMessage:
                   type: boolean
                   default: true
-                  description: When true, this option disables the resolve message [OK] that is sent when the alerting state returns to false.
+                  description: Отключает отправку алерта о разрешении [OK] когда состояние алерт возвращается в неактивное состояние.
                 isDefault:
                   type: boolean
                   default: false
-                  description: Use this notification channel for all alerts.
+                  description: Использовать этот канал для всех алертов.
                 alertManager:
                   type: object
-                  description: Alert manager settings.
+                  description: Настройка канала внешнего Prometheus Alert Manager.
                   required:
                   - address
                   properties:
@@ -52,33 +52,33 @@ spec:
                       type: string
                       x-examples: [ "http://alerts.mycompany.com", "https://alerts.company.com", "http://192.168.1.1" ]
                       pattern: "^https?://[^\\s/$.?#].[^\\s]*$"
-                      description: URL of an external Alertmanager.
+                      description: URL внешнего Alertmanager.
                     auth:
                       type: object
-                      description: Authorization properties.
+                      description: Параметры авторизации.
                       required:
                       - basic
                       properties:
                         basic:
                           type: object
-                          description: Basic authorization properties.
+                          description: Basic authorization параметры.
                           required:
                           - username
                           - password
                           properties:
                             username:
-                              description: User name.
+                              description: Пользователь.
                               type: string
                             password:
-                              description: Password.
+                              description: Пароль.
                               type: string
                               format: password
       additionalPrinterColumns:
         - jsonPath: .spec.type
           name: Type
-          description: Alerts channel type.
+          description: Тип канала.
           type: string
         - jsonPath: .spec.description
           name: Description
-          description: Alerts channel description.
+          description: Описание канала.
           type: string
