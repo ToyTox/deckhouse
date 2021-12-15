@@ -1,0 +1,19 @@
+properties:
+  includeNames:
+    type: array
+    items:
+      type: string
+    x-examples:
+    - ["prod-.*", "infra-.*"]
+    description: |
+      Список паттернов нейимпейсов для включения мониторинга
+    default: []
+  excludeNames:
+    type: array
+    items:
+      type: string
+    x-examples:
+    - ["infra-test"]
+    description: |
+      Список паттернов нейимпейсов для исключения из мониторинга
+    default: []

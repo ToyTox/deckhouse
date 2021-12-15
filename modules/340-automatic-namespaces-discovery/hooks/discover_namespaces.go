@@ -56,6 +56,12 @@ func applyNamespaceFilter(obj *unstructured.Unstructured) (go_hook.FilterResult,
 }
 
 func handleNamespace(input *go_hook.HookInput) error {
+	includeNames := input.Values.Get("automaticNamespaceDiscovery.includeNames").Array()
+	excludeNames := input.Values.Get("automaticNamespaceDiscovery.excludeNames").Array()
+
+	input.LogEntry.Infoln("includeNames:", includeNames) // TODO remove
+	input.LogEntry.Infoln("excludeNames:", excludeNames) // TODO remove
+
 	input.LogEntry.Infoln("Starting namespaces handler") // TODO remove
 	snap := input.Snapshots["namespaces"]
 	if len(snap) == 0 {
@@ -67,7 +73,20 @@ func handleNamespace(input *go_hook.HookInput) error {
 	for _, ns := range snap {
 		name := ns.(string)
 		input.LogEntry.Infoln("Processing namespace:", name)
-		input.PatchCollector.MergePatch(discoverPatch, "v1", "Namespace", "", name)
+		for _, includeName := range includeNames {
+			if includeName.String() == name { // TODO enable pattern matching
+				input.LogEntry.Infoln("Including namespace:", name)
+				input.PatchCollector.MergePatch(discoverPatch, "v1", "Namespace", "", name)
+				break
+			}
+		}
+		for _, excludeName := range excludeNames {
+			if excludeName.String() == name { // TODO enable pattern matching
+				input.LogEntry.Infoln("Excluding namespace:", name)
+				input.PatchCollector.MergePatch(undiscoverPatch, "v1", "Namespace", "", name)
+				break
+			}
+		}
 	}
 
 	input.LogEntry.Infoln("Exiting") // TODO remove

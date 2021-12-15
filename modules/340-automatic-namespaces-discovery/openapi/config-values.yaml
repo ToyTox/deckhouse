@@ -1,0 +1,20 @@
+type: object
+properties:
+  includeNames:
+    type: array
+    items:
+      type: string
+    x-examples:
+    - ["prod-.*", "infra-.*"]
+    description: |
+      List of namespaces patterns to enable monitoring 
+    default: []
+  excludeNames:
+    type: array
+    items:
+      type: string
+    x-examples:
+    - ["infra-test"]
+    description: |
+      List of namespaces patterns to disable monitoring 
+    default: []

@@ -1,0 +1,7 @@
+positive:
+  config_values:
+  - includeNames:
+    - "prod-.*"
+    - "infra-.*"
+    excludeNames:
+    - "infra-test"
