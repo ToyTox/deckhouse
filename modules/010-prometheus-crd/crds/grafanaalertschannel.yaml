@@ -36,8 +36,12 @@ spec:
                   enum: ["PrometheusAlertManager"]
                 disableResolveMessage:
                   type: boolean
-                  default: false
+                  default: true
                   description: When true, this option disables the resolve message [OK] that is sent when the alerting state returns to false.
+                isDefault:
+                  type: boolean
+                  default: false
+                  description: Use this notification channel for all alerts
                 alertManager:
                   type: object
                   description: Alert manager settings

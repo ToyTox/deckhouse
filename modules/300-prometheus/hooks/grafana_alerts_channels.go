@@ -111,6 +111,14 @@ func filterGrafanaAlertsChannelCRD(obj *unstructured.Unstructured) (go_hook.Filt
 		disableResolveMsg = false
 	}
 
+	isDefault, ok, err := unstructured.NestedBool(obj.Object, "spec", "isDefault")
+	if err != nil {
+		return nil, fmt.Errorf("cannot get spec.isDefault from GrafanaAlertsChannel: %v", err)
+	}
+	if !ok {
+		isDefault = false
+	}
+
 	grafanaChannelType, ok := grafanaAlertChannelTypes[chType]
 	if !ok {
 		return nil, fmt.Errorf("unsupported GrafanaAlertsChannel type %s", chType)
@@ -125,6 +133,7 @@ func filterGrafanaAlertsChannelCRD(obj *unstructured.Unstructured) (go_hook.Filt
 		OrgID:                 1,
 		Name:                  obj.GetName(),
 		UID:                   obj.GetName(),
+		IsDefault:             isDefault,
 		Type:                  grafanaChannelType,
 		DisableResolveMessage: disableResolveMsg,
 		Settings:              settings,

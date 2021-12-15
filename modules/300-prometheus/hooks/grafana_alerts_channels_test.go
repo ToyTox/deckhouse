@@ -35,6 +35,7 @@ metadata:
   name: test
 spec:
   type: PrometheusAlertManager
+  isDefault: false
   alertManager:
     address: "http://test-alert-manager-url"
     auth:
@@ -49,6 +50,7 @@ metadata:
   name: test
 spec:
   type: PrometheusAlertManager
+  isDefault: true
   alertManager:
     address: "https://new-test-url"
     auth:
@@ -92,7 +94,7 @@ spec:
 			Type:                  "prometheus-alertmanager",
 			Name:                  "test",
 			UID:                   "test",
-			IsDefault:             false,
+			IsDefault:             true,
 			DisableResolveMessage: false,
 			SendReminder:          false,
 			Frequency:             time.Duration(0),
