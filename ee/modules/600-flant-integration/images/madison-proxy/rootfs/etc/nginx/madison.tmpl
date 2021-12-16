@@ -25,6 +25,8 @@ server {
 
     rewrite /api/v2/alerts /api/events/prometheus/${MADISON_AUTH_KEY} break;
 
+    rewrite /api/v1/alerts /api/events/prometheus/${MADISON_AUTH_KEY} break;
+
     proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504 http_403 http_404 http_429 non_idempotent;
     proxy_ssl_server_name on;
     proxy_ssl_name madison.flant.com;

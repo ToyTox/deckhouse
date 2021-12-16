@@ -1,3 +1,4 @@
+{{- if and (.Values.flantIntegration.madisonAuthKey) (and ($.Values.global.enabledModules | has "prometheus-crd") ($.Values.global.enabledModules | has "prometheus")) }}
 apiVersion: deckhouse.io/v1alpha1
 kind: GrafanaAlertsChannel
 metadata:
@@ -8,6 +9,8 @@ spec:
   type: PrometheusAlertManager
   # we do not need receive [OK] alerts in madison (and do not want show in polk)
   disableResolveMessage: true
+  # todo think about disable default from config
   isDefault: true
   alertManager:
-    address: {{ printf "http://madison-proxy.d8-monitoring.svc.%s:8080/api/v2/alerts" .Values.global.discovery.clusterDomain | quote }}
+    address: {{ printf "http://madison-proxy.d8-monitoring.svc.%s:8080" .Values.global.discovery.clusterDomain | quote }}
+{{- end }}
