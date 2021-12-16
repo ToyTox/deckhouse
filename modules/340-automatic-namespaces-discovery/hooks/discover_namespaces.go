@@ -70,21 +70,22 @@ func handleNamespace(input *go_hook.HookInput) error {
 	}
 
 	input.LogEntry.Infoln("Processing snapshot", snap) // TODO remove
+NSLOOP:
 	for _, ns := range snap {
 		name := ns.(string)
 		input.LogEntry.Infoln("Processing namespace:", name)
-		for _, includeName := range includeNames {
-			if includeName.String() == name { // TODO enable pattern matching
-				input.LogEntry.Infoln("Including namespace:", name)
-				input.PatchCollector.MergePatch(discoverPatch, "v1", "Namespace", "", name)
-				break
-			}
-		}
 		for _, excludeName := range excludeNames {
 			if excludeName.String() == name { // TODO enable pattern matching
 				input.LogEntry.Infoln("Excluding namespace:", name)
 				input.PatchCollector.MergePatch(undiscoverPatch, "v1", "Namespace", "", name)
-				break
+				continue NSLOOP
+			}
+		}
+		for _, includeName := range includeNames {
+			if includeName.String() == name { // TODO enable pattern matching
+				input.LogEntry.Infoln("Including namespace:", name)
+				input.PatchCollector.MergePatch(discoverPatch, "v1", "Namespace", "", name)
+				continue NSLOOP
 			}
 		}
 	}

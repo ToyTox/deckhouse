@@ -25,9 +25,9 @@ import (
 
 var _ = Describe("Modules :: automatic-namespaces-discovery :: hooks :: discover_namespaces ::", func() {
 
-	f := HookExecutionConfigInit(`{}`, `{}`)
-
 	Context("Empty config", func() {
+		f := HookExecutionConfigInit(`{}`, `{}`)
+
 		BeforeEach(func() {
 			f.KubeStateSet(`
 ---
@@ -59,4 +59,40 @@ metadata:
 
 		})
 	})
+
+	Context("Static matching", func() {
+
+		f := HookExecutionConfigInit(`{"automaticNamespaceDiscovery":{"includeNames":["test1"],"excludeNames":["test2"]}}`, `{}`)
+
+		BeforeEach(func() {
+			f.KubeStateSet(`
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test1
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test2
+  annotations:
+    extended-monitoring.flant.com/enabled: "true"
+`)
+			f.BindingContexts.Set(f.GenerateBeforeHelmContext())
+			f.RunHook()
+		})
+
+		It("Namespace annotations should change", func() {
+			Expect(f).To(ExecuteSuccessfully())
+			Expect(f.PatchCollector.Operations()).To(HaveLen(2))
+
+			ns1 := f.KubernetesResource("Namespace", "", "test1")
+			Expect(ns1.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
+
+			ns2 := f.KubernetesResource("Namespace", "", "test2")
+			Expect(ns2.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeFalse())
+		})
+	})
+
 })
