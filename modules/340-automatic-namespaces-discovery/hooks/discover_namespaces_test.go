@@ -95,4 +95,54 @@ metadata:
 		})
 	})
 
+	Context("Pattern matching", func() {
+
+		f := HookExecutionConfigInit(`{"automaticNamespaceDiscovery":{"includeNames":["prod-.*","infra-.*"],"excludeNames":["infra-test"]}}`, `{}`)
+
+		BeforeEach(func() {
+			f.KubeStateSet(`
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod-ns1
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: infra-ns1
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: infra-test
+`)
+			f.BindingContexts.Set(f.GenerateBeforeHelmContext())
+			f.RunHook()
+		})
+
+		It("Namespace annotations should change", func() {
+			Expect(f).To(ExecuteSuccessfully())
+			Expect(f.PatchCollector.Operations()).To(HaveLen(2))
+
+			ns1 := f.KubernetesResource("Namespace", "", "foo")
+			Expect(ns1.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeFalse())
+
+			ns2 := f.KubernetesResource("Namespace", "", "prod-ns1")
+			Expect(ns2.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
+
+			ns3 := f.KubernetesResource("Namespace", "", "infra-ns1")
+			Expect(ns3.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeFalse())
+
+			ns4 := f.KubernetesResource("Namespace", "", "infra-test")
+			Expect(ns4.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeFalse())
+
+		})
+	})
+
 })
