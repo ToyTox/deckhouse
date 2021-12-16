@@ -1,0 +1,78 @@
+bashible:
+  fixes:
+    - description: Cluster bootstrab on Azure works for Ubuntu 20.04
+      pull_request: https://github.com/deckhouse/deckhouse/pull/422
+cert-manager:
+  features:
+    - description: Upgrade cert-manager to v1.6.1
+      note: >-
+        cert-manager controller will be restarted. Cert-manager's CRD with version v1/alphaX is no
+        longer supported
+      pull_request: https://github.com/deckhouse/deckhouse/pull/398
+    - description: Instructions for connection Vault with cert-manager
+      note: only docs change
+      pull_request: https://github.com/deckhouse/deckhouse/pull/374
+chrony:
+  fixes:
+    - description: Fixed rollout restart time of chrony daemonset.
+      note: chrony module will be restarted.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/364
+deckhouse:
+  fixes:
+    - description: Move context generation into bashible-apiserver
+      note: bashible-apiserver will restart
+      pull_request: https://github.com/deckhouse/deckhouse/pull/375
+    - description: Fix Deckhouse Manual update mode.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/362
+istio:
+  features:
+    - description: Great module refactoring
+      pull_request: https://github.com/deckhouse/deckhouse/pull/357
+log-shipper:
+  features:
+    - description: Support storing data in Elasticsearch datastreams
+      pull_request: https://github.com/deckhouse/deckhouse/pull/372
+node-manager:
+  features:
+    - description: Added delete pods from node that requests disruption update when pod eviction is failed.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/367
+prometheus:
+  fixes:
+    - description: Bump Grafana version to fix zero-day path traversal bug (CVE-2021-43798)
+      pull_request: https://github.com/deckhouse/deckhouse/pull/421
+upmeter:
+  features:
+    - description: Assign more specific nodes for the server pod
+      pull_request: https://github.com/deckhouse/deckhouse/pull/351
+  fixes:
+    - description: >-
+        Re-create pods which change their availability zones by re-creating corresponding
+        StatefulSets
+      note: >-
+        Accidentally, fix PVC re-creation by avoiding a race with kube-controller-manager. Fixes
+        #281
+      pull_request: https://github.com/deckhouse/deckhouse/pull/350
+    - description: HTTP probe status is "down" when it cannot connect to endpoint, instead of "unknown"
+      note: >-
+        Unavailable Prometheus is not considered "up" anymore, like everything else that depends on
+        it
+      pull_request: https://github.com/deckhouse/deckhouse/pull/349
+user-authn:
+  features:
+    - description: Add the doc about Dex rate limit
+      pull_request: https://github.com/deckhouse/deckhouse/pull/352
+user-authz:
+  features:
+    - description: Add the doc about how cluster authorization rules are combined
+      pull_request: https://github.com/deckhouse/deckhouse/pull/342
+yandex-cloud-provider:
+  fixes:
+    - description: >-
+        Add additionalExternalNetworkIDs config in openapi spec, because dechouse does not converge
+        if this field exists in cluster
+      pull_request: https://github.com/deckhouse/deckhouse/pull/361
+‎ingress-nginx‎:
+  features:
+    - description: Add the ability to set a default certificate.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/393
+
